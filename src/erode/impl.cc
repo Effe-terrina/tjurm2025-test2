@@ -43,9 +43,29 @@ std::vector<cv::Mat> erode(const cv::Mat& src_erode, const cv::Mat& src_dilate) 
      *     2. dilate 之后的图像中，图中的小脚被消除了(类似答案中的样子)
      *     以上两个检查点需要自己检查，满足条件 则输入 p 通过, 否则输入 f 表示不通过
      */
-    cv::Mat dst_erode, dst_dilate;
+    cv::Mat gray_erode, dst_erode, gray_dilate, dst_dilate;
 
-    // TODO: 在这里实现你的代码
+    // 1. 将彩色图片 src_erode 转换为灰度图像
+    cv::cvtColor(src_erode, gray_erode, cv::COLOR_BGR2GRAY);
+
+    // 2. 将灰度图像进行二值化
+    cv::threshold(gray_erode, dst_erode, 50, 255, cv::THRESH_BINARY);
+
+    // 3. 对二值化后的图像进行腐蚀操作
+    cv::Mat element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+    cv::erode(dst_erode, dst_erode, element);
+
+    // 4. 将彩色图片 src_dilate 转换为灰度图像
+    cv::cvtColor(src_dilate, gray_dilate, cv::COLOR_BGR2GRAY);
+
+    // 5. 将灰度图像进行二值化
+    cv::threshold(gray_dilate, dst_dilate, 50, 255, cv::THRESH_BINARY);
+
+    // 6. 对二值化后的图像进行膨胀操作
+    cv::dilate(dst_dilate, dst_dilate, element);
+
+    
+    
 
     return {dst_erode, dst_dilate};
 }

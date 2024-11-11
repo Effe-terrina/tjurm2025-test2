@@ -19,5 +19,16 @@ std::vector<std::vector<cv::Point>> find_contours(const cv::Mat& input) {
     
     std::vector<std::vector<cv::Point>> res;
     // IMPLEMENT YOUR CODE HERE
+     cv::Mat gray, thresh;
+    std::vector<cv::Vec4i> hierarchy;
+
+    // 1. 将输入图像转换为灰度图
+    cv::cvtColor(input, gray, cv::COLOR_BGR2GRAY);
+
+    // 2. 对灰度图进行二值化
+    cv::threshold(gray, thresh, 100, 255, cv::THRESH_BINARY_INV);
+
+    // 3. 使用 cv::findContours 函数找出所有的轮廓
+    cv::findContours(thresh, res, hierarchy, cv::RETR_CCOMP, cv::CHAIN_APPROX_SIMPLE);
     return res;
 }
